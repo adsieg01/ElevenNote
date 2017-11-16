@@ -1,4 +1,5 @@
-﻿using ElevenNote.Models;
+﻿using ElevenNote.Data;
+using ElevenNote.Models;
 using ElevenNote.Services;
 using Microsoft.AspNet.Identity;
 using System;
@@ -12,6 +13,8 @@ namespace ElevenNote.Web.Controllers
     [Authorize]
     public class NotesController : Controller
     {
+        private Guid _userId;
+
         // GET: Notes
         public ActionResult Index()
         {
@@ -44,5 +47,15 @@ namespace ElevenNote.Web.Controllers
 
             return RedirectToAction("Index");
         }
+
+        public ActionResult Details(int id)
+        {
+            var userId = Guid.Parse(User.Identity.GetUserId());
+            var svc = new NoteService(userId);
+            var model = svc.GetNoteById(id);
+            return View(model);
+        }
+        
+       
     }
 }
